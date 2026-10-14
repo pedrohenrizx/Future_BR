@@ -72,10 +72,17 @@ function checkAuth() {
     const currentUser = Parse.User.current();
     if (currentUser) {
         // User is logged in
-        const welcomeMessage = document.getElementById('welcome-message');
-        if (welcomeMessage) {
-            welcomeMessage.textContent = `Olá, ${currentUser.get('username')}!`;
-        }
+        const username = currentUser.get('username');
+        const initial = username ? username.charAt(0).toUpperCase() : 'U';
+
+        const navUserName = document.getElementById('nav-user-name');
+        const navUserInitial = document.getElementById('nav-user-initial');
+        const composeUserInitial = document.getElementById('compose-user-initial');
+
+        if (navUserName) navUserName.textContent = username;
+        if (navUserInitial) navUserInitial.textContent = initial;
+        if (composeUserInitial) composeUserInitial.textContent = initial;
+
         loadPosts();
     } else {
         // Not logged in, redirect to login page
@@ -155,30 +162,59 @@ async function loadPosts() {
             const content = post.get("content");
             const author = post.get("author");
             const authorName = author ? author.get("username") : "Usuário Desconhecido";
+            const authorHandle = authorName.toLowerCase().replace(/\s+/g, '');
+            const initial = escapeHTML(authorName.charAt(0).toUpperCase());
             const createdAt = post.createdAt;
 
             // Format time using moment.js if available, else fallback
             let timeAgo = '';
             if (typeof moment !== 'undefined') {
                 moment.locale('pt-br');
-                timeAgo = moment(createdAt).fromNow();
+                timeAgo = moment(createdAt).fromNow(true); // e.g. "2 hours" instead of "2 hours ago"
+                timeAgo = timeAgo.replace('horas', 'h').replace('minutos', 'm').replace('segundos', 's').replace('hora', 'h').replace('minuto', 'm').replace('segundo', 's');
             } else {
-                timeAgo = new Date(createdAt).toLocaleString('pt-BR');
+                timeAgo = new Date(createdAt).toLocaleDateString('pt-BR');
             }
 
-            const postElement = document.createElement('div');
-            postElement.className = 'bg-white p-6 rounded-lg shadow-sm border border-gray-100';
+            const postElement = document.createElement('article');
+            postElement.className = 'p-4 border-b border-gray-200 hover:bg-gray-50 transition duration-200 cursor-pointer flex gap-3';
             postElement.innerHTML = `
-                <div class="flex items-center mb-4">
-                    <div class="bg-green-600 text-white rounded-full h-10 w-10 flex items-center justify-center font-bold mr-3 uppercase">
-                        ${escapeHTML(authorName.charAt(0))}
+                <div class="bg-yellow-400 text-black rounded-full h-10 w-10 flex items-center justify-center font-bold uppercase shrink-0">
+                    ${initial}
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-1 text-sm mb-1">
+                        <span class="font-bold text-gray-900 truncate hover:underline">${escapeHTML(authorName)}</span>
+                        <span class="text-gray-500 truncate">@${escapeHTML(authorHandle)}</span>
+                        <span class="text-gray-500">·</span>
+                        <span class="text-gray-500 hover:underline">${timeAgo}</span>
                     </div>
-                    <div>
-                        <h3 class="font-bold text-gray-800">${escapeHTML(authorName)}</h3>
-                        <p class="text-xs text-gray-500">${timeAgo}</p>
+                    <p class="text-gray-900 text-[15px] whitespace-pre-wrap mb-3">${escapeHTML(content)}</p>
+
+                    <!-- Action Buttons -->
+                    <div class="flex justify-between text-gray-500 max-w-md">
+                        <div class="flex items-center gap-2 group hover:text-green-600 transition duration-200">
+                            <div class="p-2 group-hover:bg-green-50 rounded-full transition duration-200">
+                                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 group hover:text-green-600 transition duration-200">
+                            <div class="p-2 group-hover:bg-green-50 rounded-full transition duration-200">
+                                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 group hover:text-yellow-500 transition duration-200">
+                            <div class="p-2 group-hover:bg-yellow-50 rounded-full transition duration-200">
+                                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 group hover:text-green-600 transition duration-200">
+                            <div class="p-2 group-hover:bg-green-50 rounded-full transition duration-200">
+                                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <p class="text-gray-700 whitespace-pre-wrap">${escapeHTML(content)}</p>
             `;
             feedStream.appendChild(postElement);
         });

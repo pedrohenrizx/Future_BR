@@ -3,60 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Campanha Flávio Bonsonaro - Login</title>
+    <title>Campanha Flávio Bonsonaro - A Rede</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script type="text/javascript" src="https://npmcdn.com/parse/dist/parse.min.js"></script>
+    <style>
+        body { background-color: #ffffff; }
+    </style>
 </head>
-<body class="bg-gray-100 h-screen flex items-center justify-center font-sans">
+<body class="text-gray-900 font-sans antialiased h-screen flex">
 
-    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <div class="text-center mb-6">
-            <h1 class="text-3xl font-bold text-green-700">Flávio Bonsonaro</h1>
-            <p class="text-gray-600 mt-2">Apoie a campanha e conecte-se!</p>
+    <div class="flex-1 flex flex-col md:flex-row">
+        <!-- Left Banner (Yellow/Green) -->
+        <div class="hidden md:flex flex-1 bg-green-600 justify-center items-center">
+            <svg class="h-64 w-64 text-yellow-400" viewBox="0 0 24 24" fill="currentColor">
+                <!-- A simple star/flag icon representing the campaign -->
+                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+            </svg>
         </div>
 
-        <!-- Login Form -->
-        <div id="login-section">
-            <h2 class="text-xl font-semibold mb-4">Entrar</h2>
-            <form id="login-form" class="space-y-4">
-                <div>
-                    <label class="block text-gray-700">Usuário</label>
-                    <input type="text" id="login-username" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" required>
-                </div>
-                <div>
-                    <label class="block text-gray-700">Senha</label>
-                    <input type="password" id="login-password" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" required>
-                </div>
-                <button type="submit" class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition duration-200">Entrar</button>
-            </form>
-            <div class="mt-4 text-center">
-                <p class="text-sm text-gray-600">Não tem uma conta? <button onclick="toggleForms()" class="text-green-600 font-semibold hover:underline">Cadastre-se</button></p>
-            </div>
-            <div id="login-error" class="mt-4 text-red-500 text-sm hidden text-center"></div>
-        </div>
+        <!-- Right Login/Register Section -->
+        <div class="flex-1 flex flex-col justify-center px-8 sm:px-16 lg:px-24">
+            <div class="w-full max-w-md">
+                <h1 class="text-5xl font-black text-gray-900 mb-12">Acontecendo agora</h1>
+                <h2 class="text-3xl font-bold text-gray-900 mb-8">Junte-se à campanha hoje.</h2>
 
-        <!-- Registration Form -->
-        <div id="register-section" class="hidden">
-            <h2 class="text-xl font-semibold mb-4">Cadastrar</h2>
-            <form id="register-form" class="space-y-4">
-                <div>
-                    <label class="block text-gray-700">Usuário</label>
-                    <input type="text" id="register-username" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" required>
+                <!-- Login Form -->
+                <div id="login-section">
+                    <form id="login-form" class="space-y-4">
+                        <div>
+                            <input type="text" id="login-username" class="w-full px-4 py-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-lg" placeholder="Nome de usuário" required>
+                        </div>
+                        <div>
+                            <input type="password" id="login-password" class="w-full px-4 py-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-lg" placeholder="Senha" required>
+                        </div>
+                        <button type="submit" class="w-full bg-green-600 text-white font-bold py-3 rounded-full hover:bg-green-700 transition duration-200 text-lg">Entrar</button>
+                    </form>
+                    <div id="login-error" class="mt-4 text-red-500 text-sm hidden"></div>
+
+                    <div class="mt-8 flex items-center justify-between">
+                        <span class="w-1/5 border-b border-gray-300"></span>
+                        <span class="text-sm text-gray-500 uppercase">ou</span>
+                        <span class="w-1/5 border-b border-gray-300"></span>
+                    </div>
+
+                    <div class="mt-8">
+                        <p class="text-gray-600 mb-4 font-semibold text-lg">Não tem uma conta?</p>
+                        <button onclick="toggleForms()" class="w-full border border-gray-300 text-green-600 font-bold py-3 rounded-full hover:bg-green-50 transition duration-200 text-lg">Criar conta</button>
+                    </div>
                 </div>
-                <div>
-                    <label class="block text-gray-700">Email</label>
-                    <input type="email" id="register-email" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" required>
+
+                <!-- Registration Form -->
+                <div id="register-section" class="hidden">
+                    <form id="register-form" class="space-y-4">
+                        <div>
+                            <input type="text" id="register-username" class="w-full px-4 py-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-lg" placeholder="Nome de usuário" required>
+                        </div>
+                        <div>
+                            <input type="email" id="register-email" class="w-full px-4 py-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-lg" placeholder="E-mail" required>
+                        </div>
+                        <div>
+                            <input type="password" id="register-password" class="w-full px-4 py-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-lg" placeholder="Senha" required>
+                        </div>
+                        <button type="submit" class="w-full bg-yellow-400 text-black font-bold py-3 rounded-full hover:bg-yellow-500 transition duration-200 text-lg">Inscrever-se</button>
+                    </form>
+                    <div id="register-error" class="mt-4 text-red-500 text-sm hidden"></div>
+
+                    <div class="mt-8">
+                        <p class="text-gray-600 mb-4 font-semibold text-lg">Já tem uma conta?</p>
+                        <button onclick="toggleForms()" class="w-full border border-gray-300 text-green-600 font-bold py-3 rounded-full hover:bg-green-50 transition duration-200 text-lg">Entrar</button>
+                    </div>
                 </div>
-                <div>
-                    <label class="block text-gray-700">Senha</label>
-                    <input type="password" id="register-password" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" required>
-                </div>
-                <button type="submit" class="w-full bg-yellow-500 text-white py-2 rounded-lg hover:bg-yellow-600 transition duration-200">Cadastrar</button>
-            </form>
-            <div class="mt-4 text-center">
-                <p class="text-sm text-gray-600">Já tem uma conta? <button onclick="toggleForms()" class="text-green-600 font-semibold hover:underline">Entrar</button></p>
+
             </div>
-            <div id="register-error" class="mt-4 text-red-500 text-sm hidden text-center"></div>
         </div>
     </div>
 
